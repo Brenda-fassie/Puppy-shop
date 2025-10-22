@@ -1,7 +1,11 @@
 import sys
 import csv
-import datetime
 from getpass import getpass
+
+# Import custom modules
+from sales_operations import (enter_sales_record, search_sales_by_date, 
+                              search_sales_by_product_name, search_sales_by_name_and_date)
+from product_operations import add_new_product, modify_product
 
 def load_csv_data(file_path, delimiter=','):
     """Loads data from a CSV file."""
@@ -55,12 +59,18 @@ def main():
 
         if choice == '1':
             enter_sales_record(sales_data, products_data)
-        elif choice == '2' and logged_in_user_role == 'manager':
-            modify_product(products_data)
-        elif choice == '3' and logged_in_user_role == 'manager':
-            add_new_product(products_data)
+        elif choice == '2':
+            search_sales_by_date(sales_data, products_data)
+        elif choice == '3':
+            search_sales_by_product_name(sales_data, products_data)
         elif choice == '4':
-            # 5. Logout
+            search_sales_by_name_and_date(sales_data, products_data)
+        elif choice == '5' and logged_in_user_role == 'manager':
+            modify_product(products_data)
+        elif choice == '6' and logged_in_user_role == 'manager':
+            add_new_product(products_data)
+        elif choice == '7':
+            # Logout
             save_csv_data(sales_file_path, sales_data, sales_header, delimiter='\t')
             save_csv_data(products_file_path, products_data, products_header)
             print("Data saved. Logging out. Goodbye!")
@@ -69,142 +79,6 @@ def main():
             print("Invalid choice. Please try again.")
 
 
-def modify_product(products_data):
-    """Handles modifying an existing product's details."""
-    print("\n--- Modify Puppy Product Details ---")
-    
-    # Display all products
-    print("\n--- Available Products ---")
-    for p in products_data:
-        print(f"ID: {p[0]}, Name: {p[1]}, Price: {p[2]}, Stock: {p[3]}")
-    print("-------------------------")
-    
-    product_id = input("Enter the product ID to modify: ")
-    product_to_modify = None
-    for p in products_data:
-        if p[0] == product_id:
-            product_to_modify = p
-            break
-    
-    if not product_to_modify:
-        print("Error: Product ID not found.")
-        return
-    
-    print(f"\nModifying product: {product_to_modify[1]}")
-    print("Leave blank to keep current value")
-    
-    # Modify price
-    new_price = input(f"Enter new price (current: {product_to_modify[2]}): ")
-    if new_price:
-        try:
-            price = float(new_price)
-            if price < 0:
-                print("Error: Price cannot be negative.")
-                return
-            product_to_modify[2] = f"{price:.2f}"
-        except ValueError:
-            print("Error: Invalid price. Please enter a number.")
-            return
-    
-    # Modify stock
-    new_stock = input(f"Enter new stock level (current: {product_to_modify[3]}): ")
-    if new_stock:
-        try:
-            stock = int(new_stock)
-            if stock < 0:
-                print("Error: Stock cannot be negative.")
-                return
-            product_to_modify[3] = str(stock)
-        except ValueError:
-            print("Error: Invalid stock. Please enter a number.")
-            return
-    
-    print(f"Product '{product_to_modify[1]}' updated successfully.")
-
-
-def add_new_product(products_data):
-    """Handles adding a new product to the system."""
-    print("\n--- Add a New Puppy Product ---")
-
-    # Generate new product ID
-    # This is a simple way to generate a new ID. A more robust system might handle deleted IDs.
-    new_id = str(max([int(p[0]) for p in products_data]) + 1)
-
-    name = input("Enter product name: ")
-    if not name:
-        print("Error: Product name cannot be empty.")
-        return
-
-    try:
-        price = float(input("Enter product price: "))
-        if price < 0:
-            print("Error: Price cannot be negative.")
-            return
-    except ValueError:
-        print("Error: Invalid price. Please enter a number.")
-        return
-
-    try:
-        stock = int(input("Enter initial stock level: "))
-        if stock < 0:
-            print("Error: Stock cannot be negative.")
-            return
-    except ValueError:
-        print("Error: Invalid stock. Please enter a number.")
-        return
-
-    new_product = [new_id, name, f"{price:.2f}", str(stock)]
-    products_data.append(new_product)
-    print(f"Product '{name}' added successfully with ID {new_id}.")
-
-
-def enter_sales_record(sales_data, products_data):
-    """Handles the process of entering a new sales record."""
-    print("\n--- Available Products ---")
-    for p in products_data:
-        print(f"ID: {p[0]}, Name: {p[1]}, Price: {p[2]}, Stock: {p[3]}")
-    print("-------------------------")
-
-    product_id = input("Enter the product ID: ")
-    product_to_sell = None
-    for p in products_data:
-        if p[0] == product_id:
-            product_to_sell = p
-            break
-
-    if not product_to_sell:
-        print("Error: Product ID not found.")
-        return
-
-    try:
-        quantity = int(input(f"Enter quantity for {product_to_sell[1]}: "))
-        if quantity <= 0:
-            print("Error: Quantity must be a positive number.")
-            return
-        
-        current_stock = int(product_to_sell[3])
-        if quantity > current_stock:
-            print(f"Error: Not enough stock. Only {current_stock} available.")
-            return
-
-    except ValueError:
-        print("Error: Invalid quantity. Please enter a number.")
-        return
-
-    # Assuming payment is handled externally for now, we calculate the total price.
-    price = float(product_to_sell[2])
-    total_payment = price * quantity
-    print(f"Total price: {total_payment:.2f}")
-
-    # Update stock
-    product_to_sell[3] = str(current_stock - quantity)
-
-    # Record the sale
-    now = datetime.datetime.now()
-    sale_record = [now.strftime("%d/%m/%Y"), now.strftime("%H:%M:%S"), product_id, str(quantity), f"{total_payment:.2f}"]
-    sales_data.append(sale_record)
-
-    print("Sale recorded successfully!")
 
 
 def save_csv_data(file_path, data, header, delimiter=','):
@@ -219,10 +93,13 @@ def display_menu(role):
     """Displays the menu based on the user's role."""
     print("\n--- Menu ---")
     print("1. Enter a sales record")
+    print("2. Search sales by date")
+    print("3. Search sales by product name")
+    print("4. Search sales by product name and date range")
     if role == 'manager':
-        print("2. Modify puppy product details")
-        print("3. Add a new puppy product")
-    print("4. Logout")
+        print("5. Modify puppy product details")
+        print("6. Add a new puppy product")
+    print("7. Logout")
 
 
 def login(users_data):

@@ -6,11 +6,19 @@ This program is a command-line sales and inventory management system for a pet s
 
 ## 2. Features
 
+### Question 1 Features:
 *   **Role-Based User Authentication**: Differentiates between `manager` and `assistant` roles with different permissions.
 *   **Sales Recording**: Allows users to record new sales, which automatically updates product stock levels.
-*   **Product Management**: Allows managers to modify existing product details (price and stock level) and add new products to the inventory.
+*   **Product Management**: Allows managers to add new products to the inventory.
 *   **Data Persistence**: Loads data from CSV files at the start and saves all changes back to the files upon logout.
 *   **Secure Password Entry**: Hides password input for security.
+
+### Question 2 Features (New):
+*   **Modular Design**: Code is organized into separate modules (sales_operations.py, product_operations.py) for better maintainability.
+*   **Search Sales by Date**: Search and display all sales made on a specific date.
+*   **Search Sales by Product Name**: Case-insensitive partial match search for sales by product name (e.g., "dog" matches "Junior Dog Food" and "Dog Collar").
+*   **Search Sales by Name and Date Range**: Combined search by product name and date range.
+*   **Enhanced Modify Product**: Managers can search for products by ID or name (partial match) when modifying.
 
 ## 3. Requirements
 
@@ -32,7 +40,9 @@ The program will load these files along with `users.csv` for authentication. You
 
 ## 5. File Structure
 
-*   `pet_shop_manager.py`: The main Python script containing all the program logic.
+*   `pet_shop_manager.py`: The main Python script with authentication and menu logic.
+*   `sales_operations.py`: Module containing sales-related functions (enter, search).
+*   `product_operations.py`: Module containing product-related functions (add, modify).
 *   `puppy.csv`: Stores product information (id, name, price, stock).
 *   `sales.csv`: Stores all sales transaction records.
 *   `users.csv`: Stores user credentials and roles (username, password, type).
@@ -57,19 +67,41 @@ This section provides a guide on how to test the program's functionality to ensu
 5.  Inspect `puppy.csv` to confirm the stock for ID `1` has been reduced. Inspect `sales.csv` to confirm the new sale has been recorded at the end of the file.
 6.  **Test Insufficient Stock**: Log in again and attempt to purchase the same product, but with a quantity greater than the remaining stock. The program should display an "Not enough stock" error and cancel the transaction.
 
-### 6.3. Product Management (Manager Only)
+### 6.3. Sales Search Features
 
-**Test Modify Product:**
+**Test Search by Date:**
+1.  Log in with any credentials.
+2.  Select option `2` to search sales by date.
+3.  Enter a date (e.g., `11/09/2022`).
+4.  The program should display all sales for that date with product names.
+
+**Test Search by Product Name:**
+1.  Log in with any credentials.
+2.  Select option `3` to search sales by product name.
+3.  Enter a partial product name (e.g., `dog`).
+4.  The program should display all sales containing "dog" in the product name (case-insensitive).
+
+**Test Search by Name and Date Range:**
+1.  Log in with any credentials.
+2.  Select option `4` to search by name and date range.
+3.  Enter a product name and date range (e.g., `dog`, `11/09/2022`, `15/09/2022`).
+4.  The program should display matching sales within the date range.
+
+### 6.4. Product Management (Manager Only)
+
+**Test Modify Product (Enhanced):**
 1.  Log in as a manager (`user2` / `user2`).
-2.  Select option `2` to modify a product.
-3.  Enter a product ID and modify the price or stock level (or both).
-4.  The program should confirm that the product was updated successfully.
-5.  Log out.
-6.  Inspect `puppy.csv` to confirm the product details have been updated.
+2.  Select option `5` to modify a product.
+3.  Enter either a product ID (e.g., `1`) or product name (e.g., `dog` for partial match).
+4.  If multiple products match, select from the list.
+5.  Modify the price or stock level (or both).
+6.  The program should confirm that the product was updated successfully.
+7.  Log out.
+8.  Inspect `puppy.csv` to confirm the product details have been updated.
 
 **Test Add Product:**
 1.  Log in as a manager (`user2` / `user2`).
-2.  Select option `3` to add a new product.
+2.  Select option `6` to add a new product.
 3.  Enter a name, price, and stock for the new item.
 4.  The program should confirm that the product was added successfully.
 5.  Log out.
