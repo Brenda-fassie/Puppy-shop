@@ -57,26 +57,27 @@ def main():
         display_menu(logged_in_user_role)
         choice = input("Enter your choice: ")
 
-        if choice == '1':
-            enter_sales_record(sales_data, products_data)
-        elif choice == '2':
-            search_sales_by_date(sales_data, products_data)
-        elif choice == '3':
-            search_sales_by_product_name(sales_data, products_data)
-        elif choice == '4':
-            search_sales_by_name_and_date(sales_data, products_data)
-        elif choice == '5' and logged_in_user_role == 'manager':
-            modify_product(products_data)
-        elif choice == '6' and logged_in_user_role == 'manager':
-            add_new_product(products_data)
-        elif choice == '7':
-            # Logout
-            save_csv_data(sales_file_path, sales_data, sales_header, delimiter='\t')
-            save_csv_data(products_file_path, products_data, products_header)
-            print("Data saved. Logging out. Goodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+        match choice:
+            case '1':
+                enter_sales_record(sales_data, products_data)
+            case '2':
+                search_sales_by_date(sales_data, products_data)
+            case '3':
+                search_sales_by_product_name(sales_data, products_data)
+            case '4':
+                search_sales_by_name_and_date(sales_data, products_data)
+            case '5' if logged_in_user_role == 'manager':
+                modify_product(products_data)
+            case '6' if logged_in_user_role == 'manager':
+                add_new_product(products_data)
+            case '7':
+                # Logout
+                save_csv_data(sales_file_path, sales_data, sales_header, delimiter='\t')
+                save_csv_data(products_file_path, products_data, products_header)
+                print("Data saved. Logging out. Goodbye!")
+                break
+            case _:
+                print("Invalid choice. Please try again.")
 
 
 
