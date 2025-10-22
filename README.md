@@ -8,7 +8,7 @@ This program is a command-line sales and inventory management system for a pet s
 
 *   **Role-Based User Authentication**: Differentiates between `manager` and `assistant` roles with different permissions.
 *   **Sales Recording**: Allows users to record new sales, which automatically updates product stock levels.
-*   **Product Management**: Allows managers to add new products to the inventory.
+*   **Product Management**: Allows managers to modify existing product details (price and stock level) and add new products to the inventory.
 *   **Data Persistence**: Loads data from CSV files at the start and saves all changes back to the files upon logout.
 *   **Secure Password Entry**: Hides password input for security.
 
@@ -18,13 +18,17 @@ This program is a command-line sales and inventory management system for a pet s
 
 ## 4. How to Run the Program
 
-To run the program, navigate to the project directory in your terminal and execute the following command:
+To run the program, navigate to the project directory in your terminal and execute the following command, providing the paths to the sales and product CSV files:
 
 ```bash
-python pet_shop_manager.py
+python pet_shop_manager.py sales.csv puppy.csv
 ```
 
-The program will automatically load data from the CSV files (`sales.csv`, `puppy.csv`, and `users.csv`) located in the same directory. You will then be prompted to log in with a username and password from the `users.csv` file.
+**Command Line Arguments:**
+*   First argument: Path to the sales file (e.g., `sales.csv`)
+*   Second argument: Path to the product file (e.g., `puppy.csv`)
+
+The program will load these files along with `users.csv` for authentication. You will then be prompted to log in with a username and password from the `users.csv` file.
 
 ## 5. File Structure
 
@@ -55,8 +59,17 @@ This section provides a guide on how to test the program's functionality to ensu
 
 ### 6.3. Product Management (Manager Only)
 
-1.  **Test Add Product**: Log in as a manager (`user2` / `user2`).
-2.  Select option `2` to add a new product.
+**Test Modify Product:**
+1.  Log in as a manager (`user2` / `user2`).
+2.  Select option `2` to modify a product.
+3.  Enter a product ID and modify the price or stock level (or both).
+4.  The program should confirm that the product was updated successfully.
+5.  Log out.
+6.  Inspect `puppy.csv` to confirm the product details have been updated.
+
+**Test Add Product:**
+1.  Log in as a manager (`user2` / `user2`).
+2.  Select option `3` to add a new product.
 3.  Enter a name, price, and stock for the new item.
 4.  The program should confirm that the product was added successfully.
 5.  Log out.

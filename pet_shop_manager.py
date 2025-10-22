@@ -1,4 +1,5 @@
 
+import sys
 import csv
 import datetime
 from getpass import getpass
@@ -14,14 +15,18 @@ def load_csv_data(file_path, delimiter=','):
                 data.append(row)
     except FileNotFoundError:
         print(f"Error: File not found at {file_path}")
-        return [], []
+        sys.exit(1)
     return data, header
 
 def main():
     """Main function to run the pet shop management system."""
-    # 1. Set file paths
-    sales_file_path = "sales.csv"
-    products_file_path = "puppy.csv"
+    # 1. Get file paths from command line arguments
+    if len(sys.argv) != 3:
+        print("Usage: python pet_shop_manager.py <sales_file.csv> <products_file.csv>")
+        sys.exit(1)
+
+    sales_file_path = sys.argv[1]
+    products_file_path = sys.argv[2]
     users_file_path = "users.csv"
 
     # 2. Load data from CSV files
@@ -52,8 +57,10 @@ def main():
         if choice == '1':
             enter_sales_record(sales_data, products_data)
         elif choice == '2' and logged_in_user_role == 'manager':
+            modify_product(products_data)
+        elif choice == '3' and logged_in_user_role == 'manager':
             add_new_product(products_data)
-        elif choice == '3':
+        elif choice == '4':
             # 5. Logout
             save_csv_data(sales_file_path, sales_data, sales_header, delimiter='\t')
             save_csv_data(products_file_path, products_data, products_header)
@@ -61,6 +68,59 @@ def main():
             break
         else:
             print("Invalid choice. Please try again.")
+
+
+def modify_product(products_data):
+    """Handles modifying an existing product's details."""
+    print("\n--- Modify Puppy Product Details ---")
+    
+    # Display all products
+    print("\n--- Available Products ---")
+    for p in products_data:
+        print(f"ID: {p[0]}, Name: {p[1]}, Price: {p[2]}, Stock: {p[3]}")
+    print("-------------------------")
+    
+    product_id = input("Enter the product ID to modify: ")
+    product_to_modify = None
+    for p in products_data:
+        if p[0] == product_id:
+            product_to_modify = p
+            break
+    
+    if not product_to_modify:
+        print("Error: Product ID not found.")
+        return
+    
+    print(f"\nModifying product: {product_to_modify[1]}")
+    print("Leave blank to keep current value")
+    
+    # Modify price
+    new_price = input(f"Enter new price (current: {product_to_modify[2]}): ")
+    if new_price:
+        try:
+            price = float(new_price)
+            if price < 0:
+                print("Error: Price cannot be negative.")
+                return
+            product_to_modify[2] = f"{price:.2f}"
+        except ValueError:
+            print("Error: Invalid price. Please enter a number.")
+            return
+    
+    # Modify stock
+    new_stock = input(f"Enter new stock level (current: {product_to_modify[3]}): ")
+    if new_stock:
+        try:
+            stock = int(new_stock)
+            if stock < 0:
+                print("Error: Stock cannot be negative.")
+                return
+            product_to_modify[3] = str(stock)
+        except ValueError:
+            print("Error: Invalid stock. Please enter a number.")
+            return
+    
+    print(f"Product '{product_to_modify[1]}' updated successfully.")
 
 
 def add_new_product(products_data):
@@ -161,8 +221,9 @@ def display_menu(role):
     print("\n--- Menu ---")
     print("1. Enter a sales record")
     if role == 'manager':
-        print("2. Add a new puppy product")
-    print("3. Logout")
+        print("2. Modify puppy product details")
+        print("3. Add a new puppy product")
+    print("4. Logout")
 
 
 def login(users_data):
