@@ -13,16 +13,36 @@ This program is a command-line sales and inventory management system for a pet s
 *   **Data Persistence**: Loads data from CSV files at the start and saves all changes back to the files upon logout.
 *   **Secure Password Entry**: Hides password input for security.
 
-### Question 2 Features (New):
+### Question 2 Features:
 *   **Modular Design**: Code is organized into separate modules (sales_operations.py, product_operations.py) for better maintainability.
 *   **Search Sales by Date**: Search and display all sales made on a specific date.
 *   **Search Sales by Product Name**: Case-insensitive partial match search for sales by product name (e.g., "dog" matches "Junior Dog Food" and "Dog Collar").
 *   **Search Sales by Name and Date Range**: Combined search by product name and date range.
 *   **Enhanced Modify Product**: Managers can search for products by ID or name (partial match) when modifying.
 
+### Question 3 Features (New):
+*   **Monthly Sales Visualization**: Display overall monthly sales values and counts using dual-axis line graphs.
+*   **Product Monthly Sales**: Display monthly sales performance for a specific product with line graphs.
+*   **Sales Comparison Bar Chart**: Display total sales by product sorted in descending order using bar charts.
+*   **Uses numpy and matplotlib**: Professional data visualization with proper titles, labels, and legends.
+
 ## 3. Requirements
 
 *   Python 3
+*   numpy (for Question 3)
+*   matplotlib (for Question 3)
+
+### Installing Dependencies
+
+For Question 3 graphical features, install the required packages:
+
+```bash
+# Using apt (Debian/Ubuntu)
+sudo apt install python3-numpy python3-matplotlib
+
+# Or using pip
+pip3 install -r requirements.txt
+```
 
 ## 4. How to Run the Program
 
@@ -43,9 +63,11 @@ The program will load these files along with `users.csv` for authentication. You
 *   `pet_shop_manager.py`: The main Python script with authentication and menu logic.
 *   `sales_operations.py`: Module containing sales-related functions (enter, search).
 *   `product_operations.py`: Module containing product-related functions (add, modify).
+*   `analytics_operations.py`: Module containing data visualization functions (Question 3).
 *   `puppy.csv`: Stores product information (id, name, price, stock).
 *   `sales.csv`: Stores all sales transaction records.
 *   `users.csv`: Stores user credentials and roles (username, password, type).
+*   `requirements.txt`: Python package dependencies.
 *   `README.md`: This documentation file.
 
 ## 6. Test Evidence Guide
@@ -106,3 +128,27 @@ This section provides a guide on how to test the program's functionality to ensu
 4.  The program should confirm that the product was added successfully.
 5.  Log out.
 6.  Inspect `puppy.csv` to confirm the new product has been added at the end of the file.
+
+### 6.5. Analytics and Visualization (Question 3)
+
+**Test Monthly Sales Display:**
+1.  Log in with any credentials.
+2.  Select option `7` to display monthly sales performance.
+3.  Enter a start month (e.g., `09/2022`) and end month (e.g., `12/2022`).
+4.  A dual-axis line graph should display showing sales values (blue) and number of sales (red).
+5.  The graph should have proper title, axis labels, and legend.
+
+**Test Product Monthly Sales:**
+1.  Log in with any credentials.
+2.  Select option `8` to display product monthly sales.
+3.  View the product list and enter a product ID (e.g., `7`).
+4.  Enter start and end months (e.g., `09/2022` to `12/2022`).
+5.  A dual-axis line graph should display for the selected product.
+
+**Test Sales Comparison Bar Chart:**
+1.  Log in with any credentials.
+2.  Select option `9` to display total sales by product.
+3.  Enter a start date (e.g., `11/09/2022`) and end date (e.g., `30/09/2022`).
+4.  A bar chart should display showing all products sorted by total sales (descending).
+5.  Each bar should show the sales value on top.
+6.  The graph should have proper title, axis labels, and be sorted correctly.

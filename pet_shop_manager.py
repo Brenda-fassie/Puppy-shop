@@ -6,6 +6,8 @@ from getpass import getpass
 from sales_operations import (enter_sales_record, search_sales_by_date, 
                               search_sales_by_product_name, search_sales_by_name_and_date)
 from product_operations import add_new_product, modify_product
+from analytics_operations import (display_monthly_sales, display_product_monthly_sales,
+                                   display_product_sales_comparison)
 
 def load_csv_data(file_path, delimiter=','):
     """Loads data from a CSV file."""
@@ -70,6 +72,12 @@ def main():
         elif choice == '6' and logged_in_user_role == 'manager':
             add_new_product(products_data)
         elif choice == '7':
+            display_monthly_sales(sales_data, products_data)
+        elif choice == '8':
+            display_product_monthly_sales(sales_data, products_data)
+        elif choice == '9':
+            display_product_sales_comparison(sales_data, products_data)
+        elif choice == '10':
             # Logout
             save_csv_data(sales_file_path, sales_data, sales_header, delimiter='\t')
             save_csv_data(products_file_path, products_data, products_header)
@@ -99,7 +107,10 @@ def display_menu(role):
     if role == 'manager':
         print("5. Modify puppy product details")
         print("6. Add a new puppy product")
-    print("7. Logout")
+    print("7. Display monthly sales performance")
+    print("8. Display product monthly sales")
+    print("9. Display total sales by product (bar chart)")
+    print("10. Logout")
 
 
 def login(users_data):
