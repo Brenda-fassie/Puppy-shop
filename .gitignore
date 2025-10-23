@@ -12,3 +12,9 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Virtual Environment
+venv/
+
+# Generated content
+graphs/

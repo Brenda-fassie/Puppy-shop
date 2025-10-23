@@ -77,9 +77,9 @@ def display_monthly_sales(sales_data, products_data):
     
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.show()
+    plt.savefig("graphs/monthly_sales.png")
     
-    print(f"\nDisplayed monthly sales from {start_month} to {end_month}.")
+    print(f"\nSaved to graphs/monthly_sales.png for the period from {start_month} to {end_month}.")
 
 
 def display_product_monthly_sales(sales_data, products_data):
@@ -170,9 +170,9 @@ def display_product_monthly_sales(sales_data, products_data):
     
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.show()
+    plt.savefig("graphs/product_monthly_sales.png")
     
-    print(f"\nDisplayed monthly sales for '{product_name}' from {start_month} to {end_month}.")
+    print(f"\nSaved to graphs/product_monthly_sales.png for the period from {start_month} to {end_month}.")
 
 
 def display_product_sales_comparison(sales_data, products_data):
@@ -244,6 +244,6 @@ def display_product_sales_comparison(sales_data, products_data):
     ax.grid(axis='y', alpha=0.3)
     
     plt.tight_layout()
-    plt.show()
+    plt.savefig("graphs/product_sales_comparison.png")
     
-    print(f"\nDisplayed total sales by product from {start_date_str} to {end_date_str}.")
+    print(f"\nSaved to graphs/product_sales_comparison.png for the period from {start_date_str} to {end_date_str}.")
